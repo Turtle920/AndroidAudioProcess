@@ -13,6 +13,7 @@ import java.io.IOException;
 public class MainActivity extends AppCompatActivity {
 
     MediaPlayer mp = new MediaPlayer();
+    float leftVol=0.5f, rightVol=0.5f;
     String song = Environment.getExternalStorageDirectory().getAbsolutePath() + "/Music/tf.mp3";
 
     @Override
@@ -23,7 +24,7 @@ public class MainActivity extends AppCompatActivity {
         try {
             mp.setDataSource(song);
             mp.prepare();
-            mp.setVolume(0.5f,0.5f);
+            mp.setVolume(leftVol,rightVol);
         } catch (Exception e) {
             Log.e("DEBUG", "" + e.toString());
             e.printStackTrace();
@@ -58,19 +59,25 @@ public class MainActivity extends AppCompatActivity {
             }
         });
 
-        Button button4 = (Button)findViewById(R.id.button_up);
+        Button button4 = (Button)findViewById(R.id.button_l);
         button4.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                mp.setVolume(0.8f,0.8f);
+                if (leftVol+0.05f<=1.0f) leftVol+=0.05f;
+                if (rightVol-0.05f>=0f) rightVol-=0.05f;
+                Log.e("DEBUG",""+leftVol+" "+rightVol);
+                mp.setVolume(leftVol, rightVol);
             }
         });
 
-        Button button5 = (Button)findViewById(R.id.button_down);
+        Button button5 = (Button)findViewById(R.id.button_r);
         button5.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                mp.setVolume(0.1f, 0.1f);
+                if (leftVol-0.05f>=0f) leftVol-=0.05f;
+                if (rightVol+0.05f<=1.0f) rightVol+=0.05f;
+                Log.e("DEBUG",""+leftVol+" "+rightVol);
+                mp.setVolume(leftVol, rightVol);
             }
         });
 

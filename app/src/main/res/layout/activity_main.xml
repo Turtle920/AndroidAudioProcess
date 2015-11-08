@@ -46,16 +46,16 @@
 
 
         <Button
-            android:id="@+id/button_up"
+            android:id="@+id/button_l"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text="up" />
+            android:text="L" />
 
         <Button
-            android:id="@+id/button_down"
+            android:id="@+id/button_r"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text="down" />
+            android:text="R" />
     </LinearLayout>
 
 </LinearLayout>
