@@ -12,9 +12,10 @@ public class MainActivity extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
+        
 
         MediaPlayer mp = new MediaPlayer();
-        String song = "/sdcard/tfboys.mp3";
+        String song = Environment.getExternalStorageDirectory().getAbsolutePath() + "/Music/tf.mp3";
         try {
             mp.setDataSource(song);
             mp.prepare();
