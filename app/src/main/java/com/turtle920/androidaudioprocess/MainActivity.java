@@ -23,6 +23,7 @@ public class MainActivity extends AppCompatActivity {
         try {
             mp.setDataSource(song);
             mp.prepare();
+            mp.setVolume(0.5f,0.5f);
         } catch (Exception e) {
             Log.e("DEBUG", "" + e.toString());
             e.printStackTrace();
@@ -54,6 +55,22 @@ public class MainActivity extends AppCompatActivity {
                 } catch (IOException e) {
                     e.printStackTrace();
                 }
+            }
+        });
+
+        Button button4 = (Button)findViewById(R.id.button_up);
+        button4.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                mp.setVolume(0.8f,0.8f);
+            }
+        });
+
+        Button button5 = (Button)findViewById(R.id.button_down);
+        button5.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                mp.setVolume(0.1f, 0.1f);
             }
         });
 
