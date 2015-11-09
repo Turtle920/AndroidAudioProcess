@@ -36,7 +36,10 @@ public class MainActivity extends Activity implements SensorEventListener {
     //校准累计次数
     int caliTimes = 0;
     //校准时需要读取传感器数据的次数
-    private final int CALI_REQUIREMENT = 500;
+    private final int CALI_REQUIREMENT = 100;
+
+    //相对方向
+    float absValues[] = new float[3];
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -109,17 +112,19 @@ public class MainActivity extends Activity implements SensorEventListener {
         }
 
         if (counter++ % 10 == 1) {
-            //Log.e("DEBUG", "x:"+Math.toDegrees(values[0])+" y:"+Math.toDegrees(values[1])+" z:"+Math.toDegrees(values[2]));
-            /*Log.e("DEBUG", String.format("Orientation: %+f, %+f, %+f",
-                    Math.toDegrees(values[0]), Math.toDegrees(values[1]), Math.toDegrees(values[2]))
-                    + "");*/
+
+            for (int i = 0; i < 3; i++) {
+                absValues[i]=(float)Math.toDegrees(values[i]-caliValues[i]);
+                if (absValues[i]<-180) absValues[i]+=360;
+            }
+
             TextView textView1 = (TextView) findViewById(R.id.textView_sensorData);
             textView1.setText(String.format("ABSOrient: %+f, %+f, %+f",
                     Math.toDegrees(values[0]), Math.toDegrees(values[1]), Math.toDegrees(values[2])));
 
             TextView textView2 = (TextView) findViewById(R.id.textView_relativeData);
             textView2.setText(String.format("RLTOrient: %+04d, %+04d, %+04d",
-                    (int)Math.toDegrees(values[0] - caliValues[0]), (int)Math.toDegrees(values[1] - caliValues[1]), (int)Math.toDegrees(values[2] - caliValues[2])));
+                    (int)absValues[0], (int)absValues[1], (int)absValues[2]));
         }
     }
 
