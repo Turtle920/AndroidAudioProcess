@@ -89,7 +89,7 @@ public class MainActivity extends Activity implements SensorEventListener {
             caliValuesCache[2] = (caliValuesCache[2] * caliTimes + values[2] * 1) / (caliTimes + 1);
             caliTimes++;
             TextView textView = (TextView)findViewById(R.id.textView_percent);
-            textView.setText(""+(caliTimes*100/CALI_REQUIREMENT)+"%");
+            textView.setText(""+caliTimes+"/"+CALI_REQUIREMENT);
         }
 
         if (caliTimes == CALI_REQUIREMENT) {
@@ -118,7 +118,7 @@ public class MainActivity extends Activity implements SensorEventListener {
                     Math.toDegrees(values[0]), Math.toDegrees(values[1]), Math.toDegrees(values[2])));
 
             TextView textView2 = (TextView) findViewById(R.id.textView_relativeData);
-            textView2.setText(String.format("RLTOrient: %+d, %+d, %+d",
+            textView2.setText(String.format("RLTOrient: %+04d, %+04d, %+04d",
                     (int)Math.toDegrees(values[0] - caliValues[0]), (int)Math.toDegrees(values[1] - caliValues[1]), (int)Math.toDegrees(values[2] - caliValues[2])));
         }
     }
