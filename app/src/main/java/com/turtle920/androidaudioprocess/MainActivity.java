@@ -5,14 +5,22 @@ import android.hardware.Sensor;
 import android.hardware.SensorEvent;
 import android.hardware.SensorEventListener;
 import android.hardware.SensorManager;
+import android.media.MediaPlayer;
 import android.os.Bundle;
+import android.os.Environment;
 import android.util.Log;
 import android.view.View;
 import android.widget.Button;
 import android.widget.TextView;
 
+import java.io.IOException;
+
 //实现传感器事件监听：SensorEventListener
 public class MainActivity extends Activity implements SensorEventListener {
+
+    MediaPlayer mp = new MediaPlayer();
+    float leftVol = 0.5f, rightVol = 0.5f;
+    String song = Environment.getExternalStorageDirectory().getAbsolutePath() + "/Music/tf.mp3";
 
     private SensorManager sensorManager;
     private Sensor acc_sensor;
@@ -41,10 +49,61 @@ public class MainActivity extends Activity implements SensorEventListener {
     //相对方向
     float absValues[] = new float[3];
 
+    boolean noneCali = true;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
+
+        try {
+            mp.setDataSource(song);
+            mp.prepare();
+            mp.setVolume(leftVol, rightVol);
+        } catch (Exception e) {
+            Log.e("DEBUG", "" + e.toString());
+            e.printStackTrace();
+        }
+
+        Button button1 = (Button) findViewById(R.id.button_start);
+        button1.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                mp.start();
+            }
+        });
+
+        Button button2 = (Button) findViewById(R.id.button_pause);
+        button2.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                mp.pause();
+            }
+        });
+
+        Button button3 = (Button) findViewById(R.id.button_reset);
+        button3.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                mp.stop();
+                try {
+                    mp.prepare();
+                } catch (IOException e) {
+                    e.printStackTrace();
+                }
+            }
+        });
+
+        Button buttonC = (Button) findViewById(R.id.button_calibrate);
+        buttonC.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                noneCali = false;
+                caliOn = true;
+            }
+        });
+
+
         sensorManager = (SensorManager) getSystemService(SENSOR_SERVICE);
         acc_sensor = sensorManager.getDefaultSensor(Sensor.TYPE_ACCELEROMETER);
         mag_sensor = sensorManager.getDefaultSensor(Sensor.TYPE_MAGNETIC_FIELD);
@@ -52,13 +111,7 @@ public class MainActivity extends Activity implements SensorEventListener {
         sensorManager.registerListener(this, acc_sensor, SensorManager.SENSOR_DELAY_FASTEST);
         sensorManager.registerListener(this, mag_sensor, SensorManager.SENSOR_DELAY_FASTEST);
 
-        Button button = (Button) findViewById(R.id.button_calibrate);
-        button.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                caliOn = true;
-            }
-        });
+
     }
 
     //传感器状态改变时的回调方法
@@ -91,8 +144,8 @@ public class MainActivity extends Activity implements SensorEventListener {
             caliValuesCache[1] = (caliValuesCache[1] * caliTimes + values[1] * 1) / (caliTimes + 1);
             caliValuesCache[2] = (caliValuesCache[2] * caliTimes + values[2] * 1) / (caliTimes + 1);
             caliTimes++;
-            TextView textView = (TextView)findViewById(R.id.textView_percent);
-            textView.setText(""+caliTimes+"/"+CALI_REQUIREMENT);
+            TextView textView = (TextView) findViewById(R.id.textView_percent);
+            textView.setText("" + caliTimes + "/" + CALI_REQUIREMENT);
         }
 
         if (caliTimes == CALI_REQUIREMENT) {
@@ -100,7 +153,7 @@ public class MainActivity extends Activity implements SensorEventListener {
             caliTimes = 0;
             //从缓存里把N次平均数赋给校准标准值
             for (int i = 0; i < 3; i++) {
-                caliValues[i]=caliValuesCache[i];
+                caliValues[i] = caliValuesCache[i];
             }
             caliValuesCache[0] = 0;
             caliValuesCache[1] = 0;
@@ -114,9 +167,18 @@ public class MainActivity extends Activity implements SensorEventListener {
         if (counter++ % 10 == 1) {
 
             for (int i = 0; i < 3; i++) {
-                absValues[i]=(float)Math.toDegrees(values[i]-caliValues[i]);
-                if (absValues[i]<-180) absValues[i]+=360;
+                absValues[i] = (float) Math.toDegrees(values[i] - caliValues[i]);
+                if (absValues[i] < -180) absValues[i] += 360;
             }
+
+            if (noneCali) mp.setVolume(0.5f,0.5f);
+            else mp.setVolume(0.5f + absValues[0] / 180f, 0.5f - absValues[0] / 180f);
+
+            TextView textView3 = (TextView) findViewById(R.id.textView_lVol);
+            textView3.setText("L_VOL:" + (float) (0.5f + absValues[0] / 180f));
+
+            TextView textView4 = (TextView) findViewById(R.id.textView_rVol);
+            textView4.setText("R_VOL:" + (float) (0.5f - absValues[0] / 180f));
 
             TextView textView1 = (TextView) findViewById(R.id.textView_sensorData);
             textView1.setText(String.format("ABSOrient: %+f, %+f, %+f",
@@ -124,7 +186,7 @@ public class MainActivity extends Activity implements SensorEventListener {
 
             TextView textView2 = (TextView) findViewById(R.id.textView_relativeData);
             textView2.setText(String.format("RLTOrient: %+04d, %+04d, %+04d",
-                    (int)absValues[0], (int)absValues[1], (int)absValues[2]));
+                    (int) absValues[0], (int) absValues[1], (int) absValues[2]));
         }
     }
 

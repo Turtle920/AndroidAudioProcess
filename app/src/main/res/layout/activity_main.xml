@@ -5,6 +5,51 @@
     android:gravity="center"
     android:orientation="vertical">
 
+    <LinearLayout
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:orientation="horizontal">
+
+        <TextView
+            android:id="@+id/textView_lVol"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="L_VOL" />
+
+        <TextView
+            android:id="@+id/textView_rVol"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginLeft="50dp"
+            android:text="R_VOL" />
+    </LinearLayout>
+
+
+    <LinearLayout
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="20dp">
+
+        <Button
+            android:id="@+id/button_start"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="start" />
+
+        <Button
+            android:id="@+id/button_pause"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="pause" />
+
+        <Button
+            android:id="@+id/button_reset"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="reset" />
+
+    </LinearLayout>
+
     <TextView
         android:id="@+id/textView_sensorData"
         android:layout_width="wrap_content"
@@ -30,10 +75,10 @@
         android:text="relativeDATA" />
 
     <TextView
+        android:id="@+id/textView_percent"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:id="@+id/textView_percent"
-        android:text="/"/>
+        android:text="/" />
 
     <Button
         android:id="@+id/button_calibrate"
