@@ -168,11 +168,11 @@ public class MainActivity extends Activity implements SensorEventListener {
 
             for (int i = 0; i < 3; i++) {
                 absValues[i] = (float) Math.toDegrees(values[i] - caliValues[i]);
-                //if (absValues[0] < -180) absValues[0] += 360;
+                if (absValues[0] < -180) absValues[0] += 360;
             }
 
-            if (noneCali) mp.setVolume(0.5f,0.5f);
-            else mp.setVolume(0.5f + absValues[0] / 180f, 0.5f - absValues[0] / 180f);
+            if (noneCali) mp.setVolume(0.5f, 0.5f);
+            else mp.setVolume(0.5f - absValues[0] / 180f, 0.5f + absValues[0] / 180f);
 
             TextView textView3 = (TextView) findViewById(R.id.textView_lVol);
             textView3.setText("L_VOL:" + (float) (0.5f + absValues[0] / 180f));
