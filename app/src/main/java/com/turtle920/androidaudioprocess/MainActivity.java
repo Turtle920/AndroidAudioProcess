@@ -168,7 +168,7 @@ public class MainActivity extends Activity implements SensorEventListener {
 
             for (int i = 0; i < 3; i++) {
                 absValues[i] = (float) Math.toDegrees(values[i] - caliValues[i]);
-                if (absValues[i] < -180) absValues[i] += 360;
+                //if (absValues[0] < -180) absValues[0] += 360;
             }
 
             if (noneCali) mp.setVolume(0.5f,0.5f);
